@@ -1,0 +1,19 @@
+{
+  "name": "electron_build",
+  "version": "1.0.0",
+  "description": "This project is electron_builder for TOP Eclipse IDE",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyung-hoon/electron_build.git"
+  },
+  "author": "kyunghoon_min",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyung-hoon/electron_build/issues"
+  },
+  "homepage": "https://github.com/kyung-hoon/electron_build#readme"
+}
