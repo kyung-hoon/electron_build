@@ -1,16 +1,24 @@
 {
   "name": "electron_build",
   "version": "1.0.0",
-  "description": "This project is electron_builder for TOP Eclipse IDE",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "express": "^4.17.1",
+    "path": "^0.12.7"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kyung-hoon/electron_build.git"
   },
-  "author": "kyunghoon_min",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kyung-hoon/electron_build/issues"
