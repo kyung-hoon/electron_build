@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import formidable from 'express-formidable';
 import path from 'path';
 import fileUpload from 'express-fileupload';
-import admZip from 'adm-zip';
+import unzip from 'unzip';
 
 const app =express();
 const port =3300;
@@ -23,10 +23,9 @@ app.post('/ElectronBuild',(req,res)=>{
     const fileName = req.files.targetFile.name;
     console.log(fileName);
     uploadFiles.mv(path.join(__dirname,fileName));
-    const zip =new admZip(path.join(__dirname,'target.zip'));
-    zip.extractAllToAsync(targetPath,true,()=>{
-        console.log("extracting done!");
-    })
+    fs.createReadStream(path.join(__dirname,fileName)).pipe(unzip.Extract({path:path.join(__dirname,'target')})).on('close',()=>{
+        console.log('extracting done!');
+    });
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
