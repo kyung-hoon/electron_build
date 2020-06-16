@@ -23,9 +23,13 @@ app.post('/ElectronBuild',(req,res)=>{
     const fileName = req.files.targetFile.name;
     console.log(fileName);
     uploadFiles.mv(path.join(__dirname,fileName));
-    fs.createReadStream(path.join(__dirname,fileName)).pipe(unzip.Extract({path:path.join(__dirname,'target')})).on('close',()=>{
-        console.log('extracting done!');
-    });
+    const cp = childProcess.spawn(
+        'unzip',
+        [
+            path.join(__dirname, 'target.zip'), "-d" ,"./target"
+        ],
+        { cwd : path.join(__dirname), shell: true,  detached: true }
+    );
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
