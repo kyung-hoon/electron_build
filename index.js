@@ -12,7 +12,7 @@ const port =3300;
 app.use(fileUpload());
 app.post('/ElectronBuild',(req,res,next)=>{
     const targetPath = path.join(__dirname,'target');
-    if(fs.existsSync(path.join(__dirname,'target.zip')){
+    if(fs.existsSync(path.join(__dirname,'target.zip'))){
         fs.removeSync(path.join(__dirname,"target.zip"));
     }
     if(fs.existsSync(targetPath)){
@@ -22,7 +22,7 @@ app.post('/ElectronBuild',(req,res,next)=>{
     let uploadFiles  = req.files.targetFile;
     const fileName = req.files.targetFile.name;
     uploadFiles.mv(path.join(__dirname,fileName));
-    fs.createReadStream(path.join(__dirname,'target.zip')).pipe(unzip.Extract({path: targetPath}));
+    fs.createReadStream(path.join(__dirname,'target.zip')).pipe(unzip.Extract({path: path.join(path.join(__dirname,'target.zip'))}));
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
