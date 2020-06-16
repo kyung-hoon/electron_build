@@ -1,5 +1,5 @@
 import express from 'express';
-import fs from 'fs';
+import fs from 'fs-extra';
 import formidable from 'express-formidable';
 import path from 'path';
 import fileUpload from 'express-fileupload';
@@ -7,18 +7,14 @@ import fileUpload from 'express-fileupload';
 const app =express();
 const port =3300;
 
-// app.use(formidable({
-//     encoding: 'utf-8',
-//     uploadDir: path.join(__dirname, 'target'),
-//     multiples: true,
-//     keepExtensions:true// req.files to be arrays of files
-//     }));
 
 app.use(fileUpload());
 app.post('/ElectronBuild',(req,res,next)=>{
-    let uploadFiles  = req.files.file;
-    const fileName = req.files.file.name;
-    uploadFiles.mv(path.join(__dirname,target,fileName));
+    
+    fs.removeSync(path.join(__dirname,"target.zip"));
+    let uploadFiles  = req.files.targetFile;
+    const fileName = req.files.targetFile.name;
+    uploadFiles.mv(path.join(__dirname,fileName));
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
