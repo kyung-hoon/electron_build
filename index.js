@@ -15,9 +15,10 @@ const port =3300;
 //     }));
 
 app.use(fileUpload());
-app.post('/ElectronBuild',(req,res)=>{
-    console.log("request received");
-    console.log(req.files);
+app.post('/ElectronBuild',(req,res,next)=>{
+    let uploadFiles  = req.files.file;
+    const fileName = req.files.file.name;
+    uploadFiles.mv(path.join(__dirname,target,fileName));
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
