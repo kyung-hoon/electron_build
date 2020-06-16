@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import formidable from 'express-formidable';
 import path from 'path';
 import fileUpload from 'express-fileupload';
+import unzip from "unzip";
 
 const app =express();
 const port =3300;
@@ -10,11 +11,12 @@ const port =3300;
 
 app.use(fileUpload());
 app.post('/ElectronBuild',(req,res,next)=>{
-    
+
     fs.removeSync(path.join(__dirname,"target.zip"));
     let uploadFiles  = req.files.targetFile;
     const fileName = req.files.targetFile.name;
     uploadFiles.mv(path.join(__dirname,fileName));
+    fs.createReadStream(path.join(__dirname,'target.zip')).pipe(unzip.Extract({path: path.join(__dirname)}));
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
