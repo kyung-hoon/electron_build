@@ -8,15 +8,16 @@ export function makeElectronPackage(appName){
     const loaderPath = path.join(__dirname,'../electron-loader');
     const electronOutput = path.join(loaderPath,'output');
     const electronScript = path.join(loaderPath,'build-tools','build');
-   
-   
+    
     if(fs.existsSync(electronOutput)){
         fs.removeSync(electronOutput);
     }
 
-    generateManifest(()=>{
-        console.log('electron build start');
-        const cp = childProcess.execFile(path.join(__dirname,'../electron-loader','build-tools','build'),
+    generateManifest(appName,()=>{
+       console.log('manifest generated');
+    });
+    console.log('electron build start');
+        const cp = childProcess.execFile(path.join(loaderPath,'build-tools','build'),
 
         { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
         let stdOut ='';
@@ -31,12 +32,10 @@ export function makeElectronPackage(appName){
         cp.on('exit',()=>{
             console.log("electron build done");
         })
-    });
-   
     
 }
 
- function generateManifest(){
+ function generateManifest(appName){
     const configJson = new Object();
     const browserJson = new Object();
     const preferenceJson = new Object();

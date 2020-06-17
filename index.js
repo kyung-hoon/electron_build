@@ -14,13 +14,15 @@ const port =3300;
 app.use(fileUpload());
 app.post('/ElectronBuild',(req,res)=>{
    
-    fs.mkdirSync(targetPath);
+    
     let uploadFiles  = req.files.targetFile;
     const fileName = req.files.targetFile.name;
     const dotIndex = fileName.indexOf('.');
     const appName = fileName.substr(0,dotIndex);
     console.log(fileName);
     const targetPath = path.join(__dirname,appName);
+
+    fs.mkdirSync(targetPath);
     if(fs.existsSync(path.join(__dirname,fileName))){
         fs.removeSync(path.join(__dirname,fileName));
     }
@@ -42,7 +44,7 @@ app.post('/ElectronBuild',(req,res)=>{
     });
     
     makeElectronPackage(appName);
-    res.send();
+    res.sendFile(path.join(__dirname,'../electron-loader','output','dist',appName+" Setup 1.0.0.exe"));
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
