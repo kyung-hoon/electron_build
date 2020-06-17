@@ -7,22 +7,30 @@ export function makeElectronPackage(){
     const loaderPath = path.join(__dirname,'../electron-loader');
     const electronOutput = path.join(loaderPath,'output');
     const electronScript = path.join(loaderPath,'build-tools','build');
-
+    console.log('elcetron build start');
+   
     if(fs.existsSync(electronOutput)){
         fs.removeSync(electronOutput);
     }
-    const cp = childProcess.spawn('./build',
-    [
-        "manifest.json"
-    ],
-    { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
+    
+    generateManifest(()=>{
+        const cp = childProcess.spawn('./build',
+        [
+            "manifest.json"
+        ],
+        { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
+        cp.on('exit',()=>{
+            console.log("electron build done");
+        })
+    });
+   
     
 }
 
 function generateManifest(){
-    const configJson = new configMap();
-    const browserJson = new browserMap();
-    const preferenceJson = new preferenceMap();
+    const configJson = new Object();
+    const browserJson = new Object();
+    const preferenceJson = new Object();
 
     configJson.projectRoot='../'
     configJson.target = path.join(__dirname,'target');
@@ -45,26 +53,7 @@ function generateManifest(){
     
 }
 
-export class configMap {
-    projectRoot;
-    target;
-    platform;
-    buildType;
-    app_name;
-    electron_main_js_name;
-    electron_icon_name;
-    browserWindow_json
-}
 
-export class browserMap{
-    width;
-    height;
-    webPreferences
-}
-
-export class preferenceMap {
-    nodeIntegration;
-}
 
 
 

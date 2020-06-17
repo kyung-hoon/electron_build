@@ -24,18 +24,20 @@ app.post('/ElectronBuild',(req,res)=>{
     let uploadFiles  = req.files.targetFile;
     const fileName = req.files.targetFile.name;
     console.log(fileName);
-    uploadFiles.mv(path.join(__dirname,fileName));
-    const cp = childProcess.spawn(
-        'unzip',
-        [
-            path.join(__dirname, 'target.zip'), "-d" ,"./target"
-        ],
-        { cwd : path.join(__dirname), shell: true,  detached: true }
-    );
-
-    cp.on('exit',()=>{
-        fs.copyFileSync(path.join(__dirname,'icon.ico'),path.join(__dirname,'target','icon.ico'));
+    uploadFiles.mv(path.join(__dirname,fileName),()=>{
+        const cp = childProcess.spawn(
+            'unzip',
+            [
+                path.join(__dirname, 'target.zip'), "-d" ,"./target"
+            ],
+            { cwd : path.join(__dirname), shell: true,  detached: true }
+        );
+    
+        cp.on('exit',()=>{
+            fs.copyFileSync(path.join(__dirname,'icon.ico'),path.join(__dirname,'target','icon.ico'));
+        });
     });
+    
     makeElectronPackage();
     res.send();
 });
