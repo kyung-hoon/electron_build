@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import { error } from 'console';
 
 
-export function makeElectronPackage(appName){
+export async function makeElectronPackage(appName,res){
     const loaderPath = path.join(__dirname,'../electron-loader');
     const electronOutput = path.join(loaderPath,'output');
     const electronScript = path.join(loaderPath,'build-tools','build');
@@ -17,7 +17,7 @@ export function makeElectronPackage(appName){
        console.log('manifest generated');
     });
     console.log('electron build start');
-        const cp = childProcess.execFile(path.join(loaderPath,'build-tools','build'),
+        const cp =  childProcess.execFile(path.join(loaderPath,'build-tools','build'),['manifest.json'],
 
         { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
         let stdOut ='';
@@ -31,6 +31,10 @@ export function makeElectronPackage(appName){
         });
         cp.on('exit',()=>{
             console.log("electron build done");
+            if(fs.existsSync(path.join(__dirname,'../electron-loader','output','dist',appName+" Setup 1.0.0.exe"))){
+                console.log('binary has been created');
+            }
+            res.sendFile(path.join(__dirname,'../electron-loader','output','dist',appName+" Setup 1.0.0.exe"));
         })
     
 }

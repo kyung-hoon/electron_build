@@ -22,7 +22,6 @@ app.post('/ElectronBuild',(req,res)=>{
     console.log(fileName);
     const targetPath = path.join(__dirname,appName);
 
-    fs.mkdirSync(targetPath);
     if(fs.existsSync(path.join(__dirname,fileName))){
         fs.removeSync(path.join(__dirname,fileName));
     }
@@ -43,8 +42,8 @@ app.post('/ElectronBuild',(req,res)=>{
         });
     });
     
-    makeElectronPackage(appName);
-    res.sendFile(path.join(__dirname,'../electron-loader','output','dist',appName+" Setup 1.0.0.exe"));
+    await makeElectronPackage(appName,res);
+    
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
