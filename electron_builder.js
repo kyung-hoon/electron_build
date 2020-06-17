@@ -4,18 +4,20 @@ import fs from 'fs-extra';
 import { error } from 'console';
 
 
-export function makeElectronPackage(){
+export function makeElectronPackage(appName){
     const loaderPath = path.join(__dirname,'../electron-loader');
     const electronOutput = path.join(loaderPath,'output');
     const electronScript = path.join(loaderPath,'build-tools','build');
-    console.log('elcetron build start');
+   
    
     if(fs.existsSync(electronOutput)){
         fs.removeSync(electronOutput);
     }
 
     generateManifest(()=>{
+        console.log('electron build start');
         const cp = childProcess.execFile(path.join(__dirname,'../electron-loader','build-tools','build'),
+
         { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
         let stdOut ='';
         cp.stdout.on('error', error=>{
@@ -34,17 +36,17 @@ export function makeElectronPackage(){
     
 }
 
-function generateManifest(){
+ function generateManifest(){
     const configJson = new Object();
     const browserJson = new Object();
     const preferenceJson = new Object();
 
     configJson.projectRoot='../'
-    configJson.target = path.join(__dirname,'target');
+    configJson.target = path.join(__dirname,appName);
     configJson.platform ='win';
     configJson.buildType ='debug';
 
-    configJson.app_name = 'TopApplication';
+    configJson.app_name = appName;
     configJson.electron_main_js_name ='index.js';
     configJson.electron_icon_name='icon.ico';
 

@@ -13,32 +13,35 @@ const port =3300;
 
 app.use(fileUpload());
 app.post('/ElectronBuild',(req,res)=>{
-    const targetPath = path.join(__dirname,'target');
-    if(fs.existsSync(path.join(__dirname,'target.zip'))){
-        fs.removeSync(path.join(__dirname,"target.zip"));
+   
+    fs.mkdirSync(targetPath);
+    let uploadFiles  = req.files.targetFile;
+    const fileName = req.files.targetFile.name;
+    const dotIndex = fileName.indexOf('.');
+    const appName = fileName.substr(0,dotIndex);
+    console.log(fileName);
+    const targetPath = path.join(__dirname,appName);
+    if(fs.existsSync(path.join(__dirname,fileName))){
+        fs.removeSync(path.join(__dirname,fileName));
     }
     if(fs.existsSync(targetPath)){
         fs.removeSync(targetPath);
     }
-    fs.mkdirSync(targetPath);
-    let uploadFiles  = req.files.targetFile;
-    const fileName = req.files.targetFile.name;
-    console.log(fileName);
     uploadFiles.mv(path.join(__dirname,fileName),()=>{
         const cp = childProcess.spawn(
             'unzip',
             [
-                path.join(__dirname, 'target.zip'), "-d" ,"./target"
+                path.join(__dirname, fileName), "-d" ,"./"+appName
             ],
             { cwd : path.join(__dirname), shell: true,  detached: true }
         );
     
         cp.on('exit',()=>{
-            fs.copyFileSync(path.join(__dirname,'icon.ico'),path.join(__dirname,'target','icon.ico'));
+            fs.copyFileSync(path.join(__dirname,'icon.ico'),path.join(__dirname,appName,'icon.ico'));
         });
     });
     
-    makeElectronPackage();
+    makeElectronPackage(appName);
     res.send();
 });
 
