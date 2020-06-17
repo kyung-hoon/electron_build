@@ -5,6 +5,7 @@ import path from 'path';
 import fileUpload from 'express-fileupload';
 import unzip from 'unzip';
 import childProcess from 'child_process';
+import {makeElectronPackage} from './electron_builder';
 
 const app =express();
 const port =3300;
@@ -31,6 +32,14 @@ app.post('/ElectronBuild',(req,res)=>{
         ],
         { cwd : path.join(__dirname), shell: true,  detached: true }
     );
+
+    cp.on('exit',()=>{
+        fs.copyFileSync(path.join(__dirname,'icon.ico'),path.join(__dirname,'target','icon.ico'));
+    });
+    makeElectronPackage();
+    res.send();
 });
 
 app.listen(port, ()=>console.log('electron build service is listening'));
+
+
