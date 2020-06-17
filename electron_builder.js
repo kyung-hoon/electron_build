@@ -1,6 +1,7 @@
 import path from 'path';
 import childProcess from 'child_process';
 import fs from 'fs-extra';
+import { error } from 'console';
 
 
 export function makeElectronPackage(){
@@ -12,13 +13,19 @@ export function makeElectronPackage(){
     if(fs.existsSync(electronOutput)){
         fs.removeSync(electronOutput);
     }
-    
+
     generateManifest(()=>{
-        const cp = childProcess.spawn('./build',
-        [
-            "manifest.json"
-        ],
+        const cp = childProcess.execFile(path.join(__dirname,'../electron-loader','build-tools','build'),
         { cwd : path.join(loaderPath,"build-tools"), shell: true,  detached: true });
+        let stdOut ='';
+        cp.stdout.on('error', error=>{
+            stdOut += error;            
+            console.log(stdOut);
+        });
+        cp.stdout.on('data', data=>{
+            stdOut += data;            
+            console.log(stdOut);
+        });
         cp.on('exit',()=>{
             console.log("electron build done");
         })
