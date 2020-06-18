@@ -1,0 +1,4 @@
+[submodule "electron-loader"]
+	path = electron-loader
+	url = https://github.com/kyung-hoon/electron-loader.git
+	branch = master
